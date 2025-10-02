@@ -1,5 +1,11 @@
 {
     "DISCORD_TOKEN": "",
-    "COMMAND_PREFIX": "!",
-    "ALLOWED_CHANNEL_ID": 123
+    "COMMAND_PREFIX": "",
+
+    "ALLOWED_CHANNEL?": false,
+    "ALLOWED_CHANNEL_ID": 1,
+    
+    "WELCOME_MESSAGE?": false,
+    "WELCOME_CHANNEL_ID": 1,
+    "WELCOME_MESSAGE": ""
 }
