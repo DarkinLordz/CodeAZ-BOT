@@ -2,10 +2,14 @@
     "DISCORD_TOKEN": "",
     "COMMAND_PREFIX": "",
 
-    "ALLOWED_CHANNEL?": false,
-    "ALLOWED_CHANNEL_ID": 1,
+    "CHANNEL?": false,
+    "CHANNEL_ID": 0,
     
+    "ATERNOS?": false,
+    "ATERNOS_USERNAME": "",
+    "ATERNOS_PASSWORD": "",
+
     "WELCOME_MESSAGE?": false,
-    "WELCOME_CHANNEL_ID": 1,
+    "WELCOME_CHANNEL_ID": 0,
     "WELCOME_MESSAGE": ""
 }
