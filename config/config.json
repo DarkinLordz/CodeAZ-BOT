@@ -3,13 +3,20 @@
     "COMMAND_PREFIX": "",
 
     "CHANNEL?": false,
-    "CHANNEL_ID": 0,
-    
+    "CHANNEL": 0,
+
+    "WELCOME_MESSAGE?": false,
+    "WELCOME_CHANNEL": 0,
+    "WELCOME_MESSAGE": "",
+
     "ATERNOS?": false,
     "ATERNOS_USERNAME": "",
     "ATERNOS_PASSWORD": "",
 
-    "WELCOME_MESSAGE?": false,
-    "WELCOME_CHANNEL_ID": 0,
-    "WELCOME_MESSAGE": ""
+    "REACTION_ROLE?": false,
+    "REACTION_ROLE_CHANNEL": 0,
+    "REACTION_ROLE_MESSAGE": 0,
+    "REACTION_ROLE": {
+        "": 0
+    }
 }
