@@ -36,7 +36,7 @@ intents.reactions = True # Required for reaction_roles
 intents.members = True  # Required for welcome_message
 
 # Create bot
-bot = commands.Bot(command_prefix=command_prefix, intents=intents)
+bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=None)
 
 # --- BOT FUNCTIONS ---
 
