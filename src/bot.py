@@ -1,46 +1,40 @@
 from discord.ext import commands
 from path import CONFIG_FILE
 import discord
-import aternos
-import log
 import json
+import log
 
-# Load configuration
+# --- BOT CONFIGURATION ---
+
 with open(CONFIG_FILE, "r", encoding="utf-8") as file:
     config = json.load(file)
 
-discord_token = config.get("DISCORD_TOKEN")  # Bot token
-command_prefix = config.get("COMMAND_PREFIX")  # Command prefix
+discord_token = config.get("DISCORD_TOKEN")
+command_prefix = config.get("COMMAND_PREFIX")
 
-if config.get("CHANNEL?"): # Limit bot to one channel if True
+if config.get("CHANNEL?"):
     channel_id = config.get("CHANNEL")
 
-if config.get("WELCOME_MESSAGE?"):  # Enable welcome messages if True
+if config.get("WELCOME_MESSAGE?"):
     welcome_channel_id = config.get("WELCOME_CHANNEL")
     welcome_message = config.get("WELCOME_MESSAGE")
-
-if config.get("ATERNOS?"):
-    aternos_username = config.get("ATERNOS_USERNAME")
-    aternos_password = config.get("ATERNOS_PASSWORD")
 
 if config.get("REACTION_ROLE?"):
     reaction_role_channel = config.get("REACTION_ROLE_CHANNEL")
     reaction_role_message = config.get("REACTION_ROLE_MESSAGE")
     reaction_role = config.get("REACTION_ROLE")
 
-# Set intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
-intents.reactions = True # Required for reaction_roles
-intents.members = True  # Required for welcome_message
+intents.reactions = True
+intents.members = True
 
-# Create bot
 bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=None)
 
 # --- BOT FUNCTIONS ---
 
-# Limit commands to allowed channel - This feature is complete
+# Limit commands to one channel - This feature is complete
 if config.get("CHANNEL?"):
     @bot.check
     async def globally_check_channel(ctx):
@@ -60,21 +54,6 @@ if config.get("WELCOME_MESSAGE?"):
                 await channel.send(f"{welcome_message}, {member.mention} 🎉")
         except Exception as error:
             log.log(error)
-
-# Start Aternos - This feature is complete
-if config.get("ATERNOS?"):
-    @bot.command(name="start")
-    async def start(ctx):
-        try:
-            await ctx.reply("Starting..")
-            status = aternos.start(aternos_username, aternos_password)  # returns True/False
-            if status:
-                await ctx.reply("Started successfully ✅")
-            else:
-                await ctx.reply("Failure starting ❌")
-        except Exception as error:
-            log.log(error)
-            await ctx.send("An error occurred while starting ❌")
 
 # Reaction Role - This feature is complete
 if config.get("REACTION_ROLE?"):

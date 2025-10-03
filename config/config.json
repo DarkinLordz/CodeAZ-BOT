@@ -8,11 +8,7 @@
     "WELCOME_MESSAGE?": false,
     "WELCOME_CHANNEL": 0,
     "WELCOME_MESSAGE": "",
-
-    "ATERNOS?": false,
-    "ATERNOS_USERNAME": "",
-    "ATERNOS_PASSWORD": "",
-
+    
     "REACTION_ROLE?": false,
     "REACTION_ROLE_CHANNEL": 0,
     "REACTION_ROLE_MESSAGE": 0,
