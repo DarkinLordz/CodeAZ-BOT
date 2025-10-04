@@ -3,6 +3,7 @@ from path import CONFIG_FILE
 import discord
 import json
 import log
+import requests
 
 # --- BOT CONFIGURATION ---
 
@@ -90,5 +91,18 @@ if config.get("REACTION_ROLE?"):
                     print(f"Removed {role.name} from {member.display_name}")
         except Exception as error:
             log.log(error)
+
+#random good sentence generator
+@bot.command(name="word")
+
+
+def random_fact():
+    url = "https://uselessfacts.jsph.pl/random.json?language=en"
+    response = requests.get(url)
+    data = response.json()
+    return data["text"]
+
+print("Random Fact: " + random_fact())
+
 
 bot.run(discord_token)
