@@ -14,9 +14,6 @@ command_prefix = config.get("COMMAND_PREFIX")
 if config.get("CHANNEL?"):
     channel_id = config.get("CHANNEL")
 
-if config.get("XP_SYSTEM?"):
-    xp = config.get("XP")
-
 if config.get("WELCOME_MESSAGE?"):
     welcome_channel_id = config.get("WELCOME_CHANNEL")
     welcome_message = config.get("WELCOME_MESSAGE")
