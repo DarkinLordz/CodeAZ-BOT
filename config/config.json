@@ -5,6 +5,8 @@
     "CHANNEL?": false,
     "CHANNEL": 0,
 
+    "XP_SYSTEM?": false,
+
     "WELCOME_MESSAGE?": false,
     "WELCOME_CHANNEL": 0,
     "WELCOME_MESSAGE": "",

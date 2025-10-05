@@ -7,4 +7,4 @@ DATA_DIR = os.path.join(ROOT_DIR, "data")
 SRC_DIR = os.path.join(ROOT_DIR, "src")
 
 CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
-LOG_FILE = os.path.join(DATA_DIR, "log.txt")
+XP_FILE = os.path.join(DATA_DIR, "xp.json")

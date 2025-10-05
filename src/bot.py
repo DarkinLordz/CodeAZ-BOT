@@ -1,8 +1,7 @@
+from path import CONFIG_FILE, XP_FILE
 from discord.ext import commands
-from path import CONFIG_FILE
 import discord
 import json
-import log
 
 # --- BOT CONFIGURATION ---
 
@@ -14,6 +13,9 @@ command_prefix = config.get("COMMAND_PREFIX")
 
 if config.get("CHANNEL?"):
     channel_id = config.get("CHANNEL")
+
+if config.get("XP_SYSTEM?"):
+    xp = config.get("XP")
 
 if config.get("WELCOME_MESSAGE?"):
     welcome_channel_id = config.get("WELCOME_CHANNEL")
@@ -34,61 +36,81 @@ bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=
 
 # --- BOT FUNCTIONS ---
 
-# Limit commands to one channel - This feature is complete
+# Limit commands to one channel
 if config.get("CHANNEL?"):
     @bot.check
     async def globally_check_channel(ctx):
-        try:
-            return ctx.channel.id == channel_id
-        except Exception as error:
-            log.log(error)
-            return False
+        return ctx.channel.id == channel_id
 
-# Welcome new members - This feature is complete
+# Welcome new members
 if config.get("WELCOME_MESSAGE?"):
     @bot.event
     async def on_member_join(member):
-        try:
-            channel = bot.get_channel(welcome_channel_id)
-            if channel:
-                await channel.send(f"{welcome_message}, {member.mention} 🎉")
-        except Exception as error:
-            log.log(error)
+        channel = bot.get_channel(welcome_channel_id)
+        if channel:
+            await channel.send(f"{welcome_message}, {member.mention} 🎉")
 
-# Reaction Role - This feature is complete
+# Reaction Roles
 if config.get("REACTION_ROLE?"):
     @bot.event
     async def on_raw_reaction_add(payload):
-        try:
-            if payload.message_id != reaction_role_message:
-                return
-            
-            guild = bot.get_guild(payload.guild_id)
-            role_id = reaction_role.get(str(payload.emoji))
-            if role_id:
-                role = guild.get_role(role_id)
-                member = guild.get_member(payload.user_id)
-                if role and member:
-                    await member.add_roles(role)
-                    print(f"Added {role.name} to {member.display_name}")
-        except Exception as error:
-            log.log(error)
+        if payload.message_id != reaction_role_message:
+            return
+        
+        guild = bot.get_guild(payload.guild_id)
+        role_id = reaction_role.get(str(payload.emoji))
+        if role_id:
+            role = guild.get_role(role_id)
+            member = guild.get_member(payload.user_id)
+            if role and member:
+                await member.add_roles(role)
+                print(f"Added {role.name} to {member.display_name}")
 
     @bot.event
     async def on_raw_reaction_remove(payload):
-        try:
-            if payload.message_id != reaction_role_message:
-                return
+        if payload.message_id != reaction_role_message:
+            return
 
-            guild = bot.get_guild(payload.guild_id)
-            role_id = reaction_role.get(str(payload.emoji))
-            if role_id:
-                role = guild.get_role(role_id)
-                member = guild.get_member(payload.user_id)
-                if role and member:
-                    await member.remove_roles(role)
-                    print(f"Removed {role.name} from {member.display_name}")
-        except Exception as error:
-            log.log(error)
+        guild = bot.get_guild(payload.guild_id)
+        role_id = reaction_role.get(str(payload.emoji))
+        if role_id:
+            role = guild.get_role(role_id)
+            member = guild.get_member(payload.user_id)
+            if role and member:
+                await member.remove_roles(role)
+                print(f"Removed {role.name} from {member.display_name}")
+
+# XP System
+if config.get("XP_SYSTEM?"):
+    @bot.event
+    async def on_message(message):
+        if message.author.bot:
+            return
+
+        with open(XP_FILE, "r", encoding="utf-8") as file:
+            xp_data = json.load(file)
+
+        user_id = str(message.author.id)
+        xp_data[user_id] = xp_data.get(user_id, 0) + 1
+
+        with open(XP_FILE, "w", encoding="utf-8") as file:
+            json.dump(xp_data, file, indent=4)
+
+        await bot.process_commands(message)
+
+    @bot.command(name="xp")
+    async def xp_leaderboard(ctx):
+        with open(XP_FILE, "r", encoding="utf-8") as file:
+                xp_data = json.load(file)
+
+        top_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)[:10]
+
+        leaderboard = "**🏆 XP Leaderboard (Top 10) 🏆**\n"
+        for i, (user_id, xp) in enumerate(top_users, start=1):
+            member = ctx.guild.get_member(int(user_id))
+            name = member.display_name if member else f"User ID {user_id}"
+            leaderboard += f"{i}. {name} — {xp} XP\n"
+
+        await ctx.send(leaderboard)
 
 bot.run(discord_token)
