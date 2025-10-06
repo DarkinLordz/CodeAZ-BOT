@@ -1,7 +1,9 @@
 from path import CONFIG_FILE, XP_FILE
 from discord.ext import commands
+import requests
 import discord
 import json
+import io
 
 # --- BOT CONFIGURATION ---
 
@@ -12,11 +14,13 @@ discord_token = config.get("DISCORD_TOKEN")
 command_prefix = config.get("COMMAND_PREFIX")
 
 if config.get("CHANNEL?"):
-    channel_id = config.get("CHANNEL")
+    channel = config.get("CHANNEL")
 
 if config.get("WELCOME_MESSAGE?"):
-    welcome_channel_id = config.get("WELCOME_CHANNEL")
+    welcome_channel = config.get("WELCOME_CHANNEL")
     welcome_message = config.get("WELCOME_MESSAGE")
+    if config.get("WELCOME_ROLE?"):
+        welcome_role = config.get("WELCOME_ROLE")
 
 if config.get("REACTION_ROLE?"):
     reaction_role_channel = config.get("REACTION_ROLE_CHANNEL")
@@ -37,15 +41,18 @@ bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=
 if config.get("CHANNEL?"):
     @bot.check
     async def globally_check_channel(ctx):
-        return ctx.channel.id == channel_id
+        return ctx.channel.id == channel
 
 # Welcome new members
 if config.get("WELCOME_MESSAGE?"):
     @bot.event
     async def on_member_join(member):
-        channel = bot.get_channel(welcome_channel_id)
+        channel = bot.get_channel(welcome_channel)
         if channel:
             await channel.send(f"{welcome_message}, {member.mention} 🎉")
+        if config.get("WELCOME_ROLE?"):
+            role = discord.utils.get(member.guild.roles, id=welcome_role)
+            await member.add_roles(role)
 
 # Reaction Roles
 if config.get("REACTION_ROLE?"):
@@ -109,5 +116,23 @@ if config.get("XP_SYSTEM?"):
             leaderboard += f"{i}. {name} — {xp} XP\n"
 
         await ctx.send(leaderboard)
+
+# Random Quote
+@bot.command(name="word")
+async def word(ctx):
+    data = requests.get("https://zenquotes.io/api/random").json()
+    quote = data[0]["q"]
+    author = data[0].get("a", "Unknown")
+    await ctx.send(f"{quote} — {author}")
+
+# Random Image
+@bot.command(name="image")
+async def random_image(ctx, width: int = 800, height: int = 600):
+    url = f"https://picsum.photos/{width}/{height}"
+    data = requests.get(url).content
+    file = discord.File(io.BytesIO(data), filename="random.jpg")
+    embed = discord.Embed()
+    embed.set_image(url="attachment://random.jpg")
+    await ctx.send(embed=embed, file=file)
 
 bot.run(discord_token)

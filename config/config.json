@@ -10,6 +10,8 @@
     "WELCOME_MESSAGE?": false,
     "WELCOME_CHANNEL": 0,
     "WELCOME_MESSAGE": "",
+    "WELCOME_ROLE?": false,
+    "WELCOME_ROLE": 0,
     
     "REACTION_ROLE?": false,
     "REACTION_ROLE_CHANNEL": 0,
