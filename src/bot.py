@@ -1,9 +1,7 @@
 from path import CONFIG_FILE, XP_FILE
 from discord.ext import commands
-import requests
 import discord
 import json
-import io
 
 # --- BOT CONFIGURATION ---
 
@@ -116,23 +114,5 @@ if config.get("XP_SYSTEM?"):
             leaderboard += f"{i}. {name} — {xp} XP\n"
 
         await ctx.send(leaderboard)
-
-# Random Quote
-@bot.command(name="word")
-async def word(ctx):
-    data = requests.get("https://zenquotes.io/api/random").json()
-    quote = data[0]["q"]
-    author = data[0].get("a", "Unknown")
-    await ctx.send(f"{quote} — {author}")
-
-# Random Image
-@bot.command(name="image")
-async def random_image(ctx, width: int = 800, height: int = 600):
-    url = f"https://picsum.photos/{width}/{height}"
-    data = requests.get(url).content
-    file = discord.File(io.BytesIO(data), filename="random.jpg")
-    embed = discord.Embed()
-    embed.set_image(url="attachment://random.jpg")
-    await ctx.send(embed=embed, file=file)
 
 bot.run(discord_token)
