@@ -30,12 +30,7 @@ if config.get("REACTION_ROLE?"):
     reaction_role_message = config.get("REACTION_ROLE_MESSAGE")
     reaction_role = config.get("REACTION_ROLE")
 
-intents = discord.Intents.default()
-intents.message_content = True
-intents.guilds = True
-intents.reactions = True
-intents.members = True
-
+intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=None)
 
 # --- BOT FUNCTION ---
@@ -71,7 +66,6 @@ if config.get("REACTION_ROLE?"):
             member = guild.get_member(payload.user_id)
             if role and member:
                 await member.add_roles(role)
-                print(f"Added {role.name} to {member.display_name}")
 
     @bot.event
     async def on_raw_reaction_remove(payload):
@@ -85,7 +79,6 @@ if config.get("REACTION_ROLE?"):
             member = guild.get_member(payload.user_id)
             if role and member:
                 await member.remove_roles(role)
-                print(f"Removed {role.name} from {member.display_name}")
 
 # XP System
 if config.get("XP_SYSTEM?"):
