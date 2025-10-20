@@ -3,6 +3,11 @@ from discord.ext import commands
 import discord
 import json
 
+"""
+Please make sure your code works properly and follows the existing style of the project before submitting a pull request.
+I appreciate all contributions in advance, thank you for helping improve this project.
+"""
+
 # --- BOT CONFIGURATION ---
 
 with open(CONFIG_FILE, "r", encoding="utf-8") as file:
@@ -33,7 +38,7 @@ intents.members = True
 
 bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=None)
 
-# --- BOT FUNCTIONS ---
+# --- BOT FUNCTION ---
 
 # Limit commands to one channel
 if config.get("CHANNEL?"):
@@ -41,7 +46,7 @@ if config.get("CHANNEL?"):
     async def globally_check_channel(ctx):
         return ctx.channel.id == channel
 
-# Welcome new members
+# Welcome new member
 if config.get("WELCOME_MESSAGE?"):
     @bot.event
     async def on_member_join(member):
@@ -52,7 +57,7 @@ if config.get("WELCOME_MESSAGE?"):
             role = discord.utils.get(member.guild.roles, id=welcome_role)
             await member.add_roles(role)
 
-# Reaction Roles
+# Reaction Role
 if config.get("REACTION_ROLE?"):
     @bot.event
     async def on_raw_reaction_add(payload):
@@ -107,7 +112,7 @@ if config.get("XP_SYSTEM?"):
 
         top_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)[:10]
 
-        leaderboard = "**🏆 XP Leaderboard (Top 10) 🏆**\n"
+        leaderboard = "**🏆 XP Sıralaması 🏆**\n"
         for i, (user_id, xp) in enumerate(top_users, start=1):
             member = ctx.guild.get_member(int(user_id))
             name = member.display_name if member else f"User ID {user_id}"
