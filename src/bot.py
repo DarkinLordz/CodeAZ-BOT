@@ -1,4 +1,4 @@
-from path import CONFIG_FILE, XP_FILE
+from path import CONFIG_JSON, XP_JSON
 from discord.ext import commands
 import discord
 import json
@@ -10,7 +10,7 @@ I appreciate all contributions in advance, thank you for helping improve this pr
 
 # --- BOT CONFIGURATION ---
 
-with open(CONFIG_FILE, "r", encoding="utf-8") as file:
+with open(CONFIG_JSON, "r", encoding="utf-8") as file:
     config = json.load(file)
 
 discord_token = config.get("DISCORD_TOKEN")
@@ -87,20 +87,20 @@ if config.get("XP_SYSTEM?"):
         if message.author.bot:
             return
 
-        with open(XP_FILE, "r", encoding="utf-8") as file:
+        with open(XP_JSON, "r", encoding="utf-8") as file:
             xp_data = json.load(file)
 
         user_id = str(message.author.id)
         xp_data[user_id] = xp_data.get(user_id, 0) + 1
 
-        with open(XP_FILE, "w", encoding="utf-8") as file:
+        with open(XP_JSON, "w", encoding="utf-8") as file:
             json.dump(xp_data, file, indent=4)
 
         await bot.process_commands(message)
 
     @bot.command(name="xp")
     async def xp_leaderboard(ctx):
-        with open(XP_FILE, "r", encoding="utf-8") as file:
+        with open(XP_JSON, "r", encoding="utf-8") as file:
                 xp_data = json.load(file)
 
         top_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)[:10]
