@@ -109,9 +109,8 @@ if config.get("XP_SYSTEM?"):
 
             sorted_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)
 
-            rank = next((i + 1 for i, (uid, _) in enumerate(sorted_users) if uid == user_id), "Unranked")
-
-            await ctx.send(f"{rank}. {member.display_name} — {xp} XP")
+            rank = next((i + 1 for i, (uid, _) in enumerate(sorted_users) if uid == user_id), 0)
+            await ctx.send(f"\u200b{rank}. {member.display_name} — {xp} XP")
             return
 
         top_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)[:10]
