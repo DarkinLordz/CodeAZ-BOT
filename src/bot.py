@@ -99,13 +99,24 @@ if config.get("XP_SYSTEM?"):
         await bot.process_commands(message)
 
     @bot.command(name="xp")
-    async def xp_leaderboard(ctx):
+    async def xp_leaderboard(ctx, member: discord.Member = None):
         with open(XP_JSON, "r", encoding="utf-8") as file:
-                xp_data = json.load(file)
+            xp_data = json.load(file)
+
+        if member:
+            user_id = str(member.id)
+            xp = xp_data.get(user_id, 0)
+
+            sorted_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)
+
+            rank = next((i + 1 for i, (uid, _) in enumerate(sorted_users) if uid == user_id), "Unranked")
+
+            await ctx.send(f"{rank}. {member.display_name} — {xp} XP")
+            return
 
         top_users = sorted(xp_data.items(), key=lambda x: x[1], reverse=True)[:10]
 
-        leaderboard = "**🏆 XP Sıralaması 🏆**\n"
+        leaderboard = ""
         for i, (user_id, xp) in enumerate(top_users, start=1):
             member = ctx.guild.get_member(int(user_id))
             name = member.display_name if member else f"User ID {user_id}"
