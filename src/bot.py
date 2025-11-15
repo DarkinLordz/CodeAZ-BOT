@@ -8,52 +8,45 @@ Please make sure your code works properly and follows the existing style of the 
 I appreciate all contributions in advance, thank you for helping improve this project.
 """
 
-# --- BOT CONFIGURATION ---
-
 with open(CONFIG_JSON, "r", encoding="utf-8") as file:
     config = json.load(file)
 
-discord_token = config.get("DISCORD_TOKEN")
-command_prefix = config.get("COMMAND_PREFIX")
+discord_token = config["bot"].get("token")
+command_prefix = config["bot"].get("prefix")
 
-if config.get("CHANNEL?"):
-    channel = config.get("CHANNEL")
+if config["features"]["channel"].get("enabled"):
+    channel = config["features"]["channel"].get("channelID")
 
-if config.get("WELCOME_MESSAGE?"):
-    welcome_channel = config.get("WELCOME_CHANNEL")
-    welcome_message = config.get("WELCOME_MESSAGE")
-    if config.get("WELCOME_ROLE?"):
-        welcome_role = config.get("WELCOME_ROLE")
+if config["features"]["welcome"].get("enabled"):
+    welcome_channel = config["features"]["welcome"].get("channelID")
+    welcome_message = config["features"]["welcome"].get("message")
+    if config["features"]["welcome"].get("roleID"):
+        welcome_role = config["features"]["welcome"].get("roleID")
 
-if config.get("REACTION_ROLE?"):
-    reaction_role_channel = config.get("REACTION_ROLE_CHANNEL")
-    reaction_role_message = config.get("REACTION_ROLE_MESSAGE")
-    reaction_role = config.get("REACTION_ROLE")
+if config["features"]["reactionroles"].get("enabled"):
+    reaction_role_channel = config["features"]["reactionroles"].get("channelID")
+    reaction_role_message = config["features"]["reactionroles"].get("messageID")
+    reaction_role = config["features"]["reactionroles"].get("roles")
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix=command_prefix, intents=intents, help_command=None)
 
-# --- BOT FUNCTION ---
-
-# Limit commands to one channel
-if config.get("CHANNEL?"):
+if config["features"]["channel"].get("enabled"):
     @bot.check
     async def globally_check_channel(ctx):
         return ctx.channel.id == channel
 
-# Welcome new member
-if config.get("WELCOME_MESSAGE?"):
+if config["features"]["welcome"].get("enabled"):
     @bot.event
     async def on_member_join(member):
         channel = bot.get_channel(welcome_channel)
         if channel:
             await channel.send(f"{welcome_message}, {member.mention} 🎉")
-        if config.get("WELCOME_ROLE?"):
+        if config["features"]["welcome"].get("roleID"):
             role = discord.utils.get(member.guild.roles, id=welcome_role)
             await member.add_roles(role)
 
-# Reaction Role
-if config.get("REACTION_ROLE?"):
+if config["features"]["reactionroles"].get("enabled"):
     @bot.event
     async def on_raw_reaction_add(payload):
         if payload.message_id != reaction_role_message:
@@ -80,8 +73,7 @@ if config.get("REACTION_ROLE?"):
             if role and member:
                 await member.remove_roles(role)
 
-# XP System
-if config.get("XP_SYSTEM?"):
+if config["features"]["xp"].get("enabled"):
     @bot.event
     async def on_message(message):
         if message.author.bot:

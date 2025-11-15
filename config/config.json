@@ -1,22 +1,28 @@
 {
-    "DISCORD_TOKEN": "",
-    "COMMAND_PREFIX": "",
-
-    "CHANNEL?": false,
-    "CHANNEL": 0,
-
-    "XP_SYSTEM?": false,
-
-    "WELCOME_MESSAGE?": false,
-    "WELCOME_CHANNEL": 0,
-    "WELCOME_MESSAGE": "",
-    "WELCOME_ROLE?": false,
-    "WELCOME_ROLE": 0,
-    
-    "REACTION_ROLE?": false,
-    "REACTION_ROLE_CHANNEL": 0,
-    "REACTION_ROLE_MESSAGE": 0,
-    "REACTION_ROLE": {
-        "": 0
+  "bot": {
+    "token": "",
+    "prefix": ""
+  },
+  
+  "features": {
+    "channel": {
+      "enabled": false,
+      "channelID": 0
+    },
+    "xp": {
+      "enabled": false
+    },
+    "welcome": {
+      "enabled": false,
+      "channelID": 0,
+      "message": "",
+      "roleID": 0
+    },
+    "reactionroles": {
+      "enabled": false,
+      "channelID": 0,
+      "messageID": 0,
+      "roles": {}
     }
+  }
 }
