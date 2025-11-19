@@ -17,6 +17,9 @@ command_prefix = config["bot"].get("prefix")
 if config["features"]["channel"].get("enabled"):
     channel = config["features"]["channel"].get("channelID")
 
+if config["features"]["xp"]["send"].get("enabled"):
+    xp_send_role = config["features"]["xp"]["send"].get("roleID")
+
 if config["features"]["welcome"].get("enabled"):
     welcome_channel = config["features"]["welcome"].get("channelID")
     welcome_message = config["features"]["welcome"].get("message")
@@ -114,5 +117,23 @@ if config["features"]["xp"].get("enabled"):
             leaderboard += f"{i}. {name} — {xp} XP\n"
 
         await ctx.send(leaderboard)
+
+    if config["features"]["xp"]["send"].get("enabled"):
+        @bot.command(name="xpsend")
+        @commands.cooldown(1, 86400, commands.BucketType.user)
+        async def xpsend(ctx, amount: int, *members: discord.Member):
+            if xp_send_role not in [r.id for r in ctx.author.roles]:
+                return
+
+            with open(XP_JSON, "r", encoding="utf-8") as f:
+                xp = json.load(f)
+
+            for m in members:
+                xp[str(m.id)] = xp.get(str(m.id), 0) + amount
+
+            with open(XP_JSON, "w", encoding="utf-8") as f:
+                json.dump(xp, f, indent=4)
+                
+            print(xp_send_role, amount, [m.id for m in members])
 
 bot.run(discord_token)

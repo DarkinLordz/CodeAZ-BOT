@@ -10,7 +10,11 @@
       "channelID": 0
     },
     "xp": {
-      "enabled": false
+      "enabled": false,
+      "send": {
+        "enabled": false,
+        "roleID": 0
+      }
     },
     "welcome": {
       "enabled": false,
